@@ -282,7 +282,7 @@ class pcModuleActivator
      */
     protected function clearTmp()
     {
-        echo 'glearing tmp ... ';
+        echo 'clearing tmp ... ';
         $tmpDir = realpath(dirname(__FILE__) . '/../tmp/');
         $files = glob($tmpDir . '/*.txt');
         $files += glob($tmpDir . '/*.php');
