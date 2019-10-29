@@ -1,6 +1,6 @@
 # pcModuleActivator
 
-OXID eShop 6 modul activation script, eg. for deployments.
+OXID eShop 6 module activation script, eg. for deployments.
 
 ## Installation
 
