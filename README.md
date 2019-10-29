@@ -14,3 +14,6 @@ OXID eShop 6 modul activation script, eg. for deployments.
 - Sync settings to subshops (EE)
 - Generate views
 - Clear tmp
+
+## Screenshot
+![pcModuleActivator](https://raw.githubusercontent.com/proudcommerce/pcModuleActivator/master/pcModuleActivator_screenshot.png)
