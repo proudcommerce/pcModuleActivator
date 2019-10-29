@@ -5,7 +5,7 @@ OXID eShop 6 modul activation script, eg. for deployments.
 ## Installation
 
 1. copy `pcModuleActivator.php` (eg. to `/source/bin` folder)
-2. execute: `php source/bin/pcModuleActivator.php`
+2. execute `php source/bin/pcModuleActivator.php`
 
 ## Features
 - Module activation order
