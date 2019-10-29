@@ -9,7 +9,7 @@
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
  * @version     1.0.0
- * @author      Tobias Merkl <https://github.com/proudcommerce>
+ * @author      Tobias Merkl <https://github.com/tabsl>
  * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
 
