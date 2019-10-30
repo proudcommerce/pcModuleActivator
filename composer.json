@@ -1,0 +1,8 @@
+{
+    "name": "proudcommerce/moduleactivator",
+    "description": "OXID eShop 6 module activation script",
+    "type": "library",
+    "license": [
+        "proprietary"
+    ]
+}
