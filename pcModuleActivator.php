@@ -13,6 +13,8 @@
  * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
 
+namespace ProudCommerce\ModuleActivator;
+
 declare(strict_types=1);
 require_once dirname(__FILE__) . "/../bootstrap.php";
 
