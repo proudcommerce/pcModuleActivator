@@ -59,9 +59,6 @@ class pcModuleActivator
      *
      * @var array
      */
-    /**
-     * @var array
-     */
     protected $excludeBlocks = [];
 
     /**
