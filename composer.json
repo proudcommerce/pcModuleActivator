@@ -1,12 +1,21 @@
 {
-    "name": "proudcommerce/moduleactivator",
-    "description": "OXID eShop 6 module activation script, eg. for deployments.",
-    "type": "library",
-    "keywords": [
-        "oxid",
-        "deployment"
-    ],
-    "license": [
-        "proprietary"
-    ]
+  "name": "proudcommerce/moduleactivator",
+  "description": "OXID eShop 6 module activation script, eg. for deployments.",
+  "version": "1.0.0",
+  "type": "library",
+  "keywords": [
+    "oxid",
+    "deployment"
+  ],
+  "license": [
+    "GPL-3.0-or-later"
+  ],
+  "require": {
+    "php": ">= 7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "ProudCommerce\\ModuleActivator\\": "."
+    }
+  }
 }

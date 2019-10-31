@@ -15,8 +15,7 @@
 
 namespace ProudCommerce\ModuleActivator;
 
-declare(strict_types=1);
-require_once dirname(__FILE__) . "/../bootstrap.php";
+require __DIR__ . "/../../../source/bootstrap.php";
 
 use \OxidEsales\Eshop\Core\DatabaseProvider;
 use \OxidEsales\Eshop\Core\Registry;
@@ -60,6 +59,9 @@ class pcModuleActivator
      *
      * @var array
      */
+    /**
+     * @var array
+     */
     protected $excludeBlocks = [
         /*['oxmodule'    => 'trosofortueberweisung',
          'oxtemplate'  => 'page/checkout/payment.tpl',
@@ -69,7 +71,97 @@ class pcModuleActivator
     ];
 
     /**
-     * Execute module ativation
+     * @return bool
+     */
+    public function getGenerateViews()
+    {
+        return $this->generateViews;
+    }
+
+    /**
+     * @param bool $generateViews
+     *
+     * @return bool
+     */
+    public function setGenerateViews(bool $generateViews): bool
+    {
+        return $this->generateViews = $generateViews;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExcludeModules()
+    {
+        return $this->excludeModules;
+    }
+
+    /**
+     * @param array $excludeModules
+     *
+     * @return array
+     */
+    public function setExcludeModules(array $excludeModules): array
+    {
+        return $this->excludeModules = $excludeModules;
+    }
+
+    /**
+     * @return array
+     */
+    public function getModuleOrderFirst()
+    {
+        return $this->moduleOrderFirst;
+    }
+
+    /**
+     * @param array $moduleOrderFirst
+     *
+     * @return array
+     */
+    public function setModuleOrderFirst(array $moduleOrderFirst): array
+    {
+        return $this->moduleOrderFirst = $moduleOrderFirst;
+    }
+
+    /**
+     * @return array
+     */
+    public function getModuleOrderLast()
+    {
+        return $this->moduleOrderLast;
+    }
+
+    /**
+     * @param array $moduleOrderLast
+     *
+     * @return array
+     */
+    public function setModuleOrderLast(array $moduleOrderLast): array
+    {
+        return $this->moduleOrderLast = $moduleOrderLast;
+    }
+
+    /**
+     * @return array
+     */
+    public function getExcludeBlocks()
+    {
+        return $this->excludeBlocks;
+    }
+
+    /**
+     * @param array $excludeBlocks
+     *
+     * @return array
+     */
+    public function setExcludeBlocks(array $excludeBlocks): array
+    {
+        return $this->excludeBlocks = $excludeBlocks;
+    }
+
+    /**
+     * Execute module activation
      */
     public function execute()
     {
@@ -293,6 +385,3 @@ class pcModuleActivator
     }
 
 }
-
-$moduleSync = new pcModuleActivator();
-$moduleSync->execute();
