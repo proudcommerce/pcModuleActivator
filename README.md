@@ -4,8 +4,8 @@ OXID eShop 6 module activation script, eg. for deployments.
 
 ## Installation
 1. get by composer `composer require proudcommerce/moduleactivator`
-2. copy `vendor/proudcommerce/moduleactivator/pcModuleActivator.php` (eg. to `/source/bin` folder)
-3. execute `php source/bin/pcModuleActivator.php`
+2. copy `vendor/proudcommerce/moduleactivator/moduleActivator.php` (eg. to `/source/bin` folder)
+3. execute `php source/bin/moduleActivator.php`
 
 ## Features
 - Module activation order
