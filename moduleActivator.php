@@ -8,7 +8,7 @@
  * @copyright   ProudCommerce | 2019
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
- * @version     2.0.0
+ * @version     2.0.1
  * @author      Tobias Merkl <https://github.com/tabsl>
  * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
@@ -29,13 +29,13 @@ try {
     $moduleActivator->setExcludeModules(['moduleid1']);
     $moduleActivator->setModuleOrderFirst(['moduleid2', 'moduleid3']);
     $moduleActivator->setModuleOrderLast(['moduleid4']);
-    $moduleActivator->setExcludeBlocks(
+    $moduleActivator->setExcludeBlocks([
         ['oxmodule'    => 'trosofortueberweisung',
          'oxtemplate'  => 'page/checkout/payment.tpl',
          'oxblockname' => 'select_payment',
          'oxfile'      => 'trosofortueberweisung_paymentSelector.tpl'
         ]
-    );
+    ]);
     */
 
     $moduleActivator->execute();

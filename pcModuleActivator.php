@@ -8,7 +8,7 @@
  * @copyright   ProudCommerce | 2019
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
- * @version     2.0.0
+ * @version     2.0.1
  * @author      Tobias Merkl <https://github.com/tabsl>
  * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
@@ -325,26 +325,27 @@ class pcModuleActivator
      */
     protected function deactivateBlocks()
     {
-        echo "deactivating not needed template blocks ...\n";
+        echo "deactivating template blocks ... ";
         if (!empty($this->excludeBlocks)) {
             foreach ($this->excludeBlocks as $excludeBlock) {
                 $sql = 'UPDATE oxtplblocks SET oxactive = 0 WHERE ';
                 foreach ($excludeBlock as $key => $value) {
                     $sql .= $key . ' = "' . $value . '" AND ';
                 }
-                echo '  -> deactivate block "' . implode($excludeBlock, '|') . '" ';
+                echo "\n" . '  -> deactivate block "' . implode($excludeBlock, ' | ') . '" ';
                 $sql = substr($sql, 0, -4);
                 DatabaseProvider::getDb()->startTransaction();
                 $iRet = DatabaseProvider::getDb()->execute($sql);
                 if ($iRet) {
                     DatabaseProvider::getDb()->commitTransaction();
-                    echo "\033[0;32mDONE\033[0m\n";
+                    echo "\033[0;32mDONE\033[0m";
                 } else {
                     DatabaseProvider::getDb()->rollbackTransaction();
-                    echo "\033[0;31mFAILED\033[0m\n";
+                    echo "\033[0;31mFAILED\033[0m";
                 }
             }
         }
+        echo "\ndeactivating template blocks ... \e[0;32mDONE\e[0m\n";
     }
 
     /**

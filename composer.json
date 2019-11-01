@@ -1,7 +1,7 @@
 {
   "name": "proudcommerce/moduleactivator",
   "description": "OXID eShop 6 module activation script, eg. for deployments.",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "type": "library",
   "keywords": [
     "oxid",
