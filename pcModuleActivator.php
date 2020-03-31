@@ -5,10 +5,10 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @copyright   ProudCommerce | 2019
+ * @copyright   ProudCommerce | 2020
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
- * @version     2.0.1
+ * @version     2.1.0
  * @author      Tobias Merkl <https://github.com/tabsl>
  * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
@@ -27,7 +27,14 @@ class pcModuleActivator
 {
 
     /**
-     * Gernate views after module actication
+     * Shop id
+     *
+     * @var int\null
+     */
+    protected $shopId = null;
+
+    /**
+     * Generate views after module actication
      *
      * @var bool
      */
@@ -60,6 +67,11 @@ class pcModuleActivator
      * @var array
      */
     protected $excludeBlocks = [];
+
+    public function __construct(int $shopId = 1)
+    {
+        $this->shopId = $shopId;
+    }
 
     /**
      * @return bool
@@ -156,12 +168,11 @@ class pcModuleActivator
      */
     public function execute()
     {
+        echo 'ModuleActivator (shop ' . $this->shopId . ")\n";
+        Registry::getConfig()->setShopId($this->shopId);
+        Registry::getConfig()->reinitialize();
         $this->clearModules();
         $this->activateModules();
-        if ('EE' === \OxidEsales\Facts\Facts::getEdition()) {
-            $this->syncModulesToSubShops();
-            $this->syncTplBlocksToSubShops();
-        }
         $this->deactivateBlocks();
         $this->clearTmp();
         if ($this->generateViews === true) {
@@ -177,17 +188,20 @@ class pcModuleActivator
      */
     protected function clearModules()
     {
+        $varnames = ['aDisabledModules', 'aModuleControllers', 'aModuleEvents', 'aModuleExtensions', 'aModuleFiles', 'aModulePaths', 'aModules', 'aModuleTemplates', 'aModuleVersions'];
+        $varname = implode($varnames, "', '");
+
         echo 'clearing modules ... ';
         $oDb = DatabaseProvider::getDb();
         $oDb->Execute(
             "DELETE
             FROM oxconfig
-            WHERE oxvarname LIKE '%module%'
+            WHERE oxshopid = " . $this->shopId . " 
+            AND oxvarname IN ('" . $varname . "')
         "
         );
         echo "\033[0;32mDONE\033[0m\n";
     }
-
 
     /**
      * Activate modules
@@ -234,7 +248,7 @@ class pcModuleActivator
      *
      * @return array
      */
-    protected function prepareActivationOrder($aModules)
+    protected function prepareActivationOrder($aModules): array
     {
         $toRemove = array_merge($this->moduleOrderFirst, $this->moduleOrderLast);
         $diffList = array_diff($aModules, $toRemove);
@@ -243,79 +257,6 @@ class pcModuleActivator
         return array_merge($this->moduleOrderFirst, $diffList, $this->moduleOrderLast);
     }
 
-    /**
-     * Sync modules to subshops
-     *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    protected function syncModulesToSubShops()
-    {
-        echo 'syncing modules to subshops ... ';
-        DatabaseProvider::getDb()->startTransaction();
-        DatabaseProvider::getDb()->execute(
-            "
-            DELETE FROM oxconfig
-            WHERE oxvarname LIKE '%module%'
-              AND oxshopid != 1
-        "
-        );
-        $iRet = DatabaseProvider::getDb()->execute(
-            "
-            INSERT INTO oxconfig
-            SELECT MD5(UUID()), oxshops.oxid, oxconfig.oxmodule, oxconfig.oxvarname,
-                   oxconfig.oxvartype, oxconfig.oxvarvalue, oxconfig.oxtimestamp
-            FROM oxconfig
-            LEFT JOIN oxshops ON oxshops.oxid != 1
-            WHERE oxvarname LIKE '%module%'
-              AND oxshopid = 1
-        "
-        );
-        if ($iRet) {
-            DatabaseProvider::getDb()->commitTransaction();
-            echo "\033[0;32mDONE\033[0m\n";
-        } else {
-            DatabaseProvider::getDb()->rollbackTransaction();
-            echo "\033[0;31mFAILED\033[0m\n";
-        }
-    }
-
-
-    /**
-     * Sync blocks to subshops
-     *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     */
-    protected function syncTplBlocksToSubShops()
-    {
-        echo 'syncing template blocks to subshops ... ';
-        DatabaseProvider::getDb()->startTransaction();
-        DatabaseProvider::getDb()->execute(
-            "
-            DELETE FROM oxtplblocks
-            WHERE oxshopid != 1;
-        "
-        );
-        $iRet = DatabaseProvider::getDb()->execute(
-            "
-            INSERT INTO oxtplblocks
-            SELECT MD5(UUID()), 1, oxshops.oxid, oxtplblocks.oxtheme, oxtplblocks.oxtemplate,
-                   oxtplblocks.oxblockname, oxtplblocks.oxpos, oxtplblocks.oxfile,
-                   oxtplblocks.oxmodule, oxtplblocks.oxtimestamp
-            FROM oxtplblocks
-            LEFT JOIN oxshops ON oxshops.oxid != 1
-            WHERE oxshopid = 1
-        "
-        );
-        if ($iRet) {
-            DatabaseProvider::getDb()->commitTransaction();
-            echo "\033[0;32mDONE\033[0m\n";
-        } else {
-            DatabaseProvider::getDb()->rollbackTransaction();
-            echo "\033[0;31mFAILED\033[0m\n";
-        }
-    }
 
     /**
      * Deactivate blocks
@@ -328,7 +269,7 @@ class pcModuleActivator
         echo "deactivating template blocks ... ";
         if (!empty($this->excludeBlocks)) {
             foreach ($this->excludeBlocks as $excludeBlock) {
-                $sql = 'UPDATE oxtplblocks SET oxactive = 0 WHERE ';
+                $sql = 'UPDATE oxtplblocks SET oxactive = 0 WHERE oxshopid = ' . $this->shopId . ' AND ';
                 foreach ($excludeBlock as $key => $value) {
                     $sql .= $key . ' = "' . $value . '" AND ';
                 }
@@ -351,7 +292,7 @@ class pcModuleActivator
     /**
      * Generate database views
      */
-    private function generateViews(): void
+    private function generateViews()
     {
 
         echo 'generating views ... ';

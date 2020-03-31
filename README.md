@@ -11,7 +11,6 @@ OXID eShop 6 module activation script, eg. for deployments.
 - Module activation order
 - Exclude modules from activation
 - Exclude tplblocks from activation
-- Sync settings to subshops (EE)
 - Generate views
 - Clear tmp
 

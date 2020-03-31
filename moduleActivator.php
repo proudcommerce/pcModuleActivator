@@ -5,10 +5,10 @@
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * @copyright   ProudCommerce | 2019
+ * @copyright   ProudCommerce | 2020
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
- * @version     2.0.1
+ * @version     2.1.0
  * @author      Tobias Merkl <https://github.com/tabsl>
  * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
@@ -21,7 +21,8 @@ require __DIR__ . '../../../vendor/autoload.php';
 use \ProudCommerce\ModuleActivator\pcModuleActivator;
 
 try {
-    $moduleActivator = new pcModuleActivator();
+	// 3 = shopid (default if not set = 1)
+    $moduleActivator = new pcModuleActivator(3);
 
     /*
     // Example configuration
