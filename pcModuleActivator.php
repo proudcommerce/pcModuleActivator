@@ -214,11 +214,15 @@ class pcModuleActivator
             $moduleList = oxNew(\OxidEsales\Eshop\Core\Module\ModuleList::class);
             // reset base::config
             $moduleList->setConfig(null);
-            $aModules = array_keys(
-                $moduleList->getModulesFromDir(
-                    Registry::getConfig()->getModulesDir()
-                )
-            );
+            try {
+                $aModules = array_keys(
+                    $moduleList->getModulesFromDir(
+                        Registry::getConfig()->getModulesDir()
+                    )
+            	);
+            } catch (\Exception $ex) {
+                echo "\033[1;33mFAILED 1\033[0m\n" . $ex->getMessage() . "\n";
+            }
             $aModules = $this->prepareActivationOrder($aModules);
             $moduleInstaller = oxNew(\OxidEsales\Eshop\Core\Module\ModuleInstaller::class);
             foreach ($aModules as $sModule) {
@@ -230,7 +234,7 @@ class pcModuleActivator
                             $moduleInstaller->activate($module);
                             echo "\033[0;32mDONE\033[0m\n";
                         } else {
-                            echo "\033[1;33mFAILED\033[0m\n";
+                            echo "\033[1;33mFAILED 2\033[0m\n";
                         }
                     } catch (\Exception $ex) {
                         echo "\033[1;33mFAILED\033[0m\n" . $ex->getMessage() . "\n";
@@ -241,7 +245,7 @@ class pcModuleActivator
             }
             echo 'activating modules ... ', "\033[0;32mDONE\033[0m\n";
         } catch (\Throwable $e) {
-            echo "\033[1;33mFAILED\033[0m\n" . $ex->getMessage() . "\n";
+            echo "\033[1;33mFAILED 3\033[0m\n" . $ex->getMessage() . "\n";
         }
     }
 
