@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.2 - 2020-04-06
+- improve module activation / catch exception (eg. permission problems)
+
 ## 2.1.1 - 2020-04-06
 - improve module activation / catch exception
 
