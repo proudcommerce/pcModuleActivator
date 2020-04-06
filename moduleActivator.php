@@ -8,7 +8,7 @@
  * @copyright   ProudCommerce | 2020
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
- * @version     2.1.0
+ * @version     2.1.1
  * @author      Tobias Merkl <https://github.com/tabsl>
  * @author      Florian Engelhardt <https://github.com/flow-control>
  **/

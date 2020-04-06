@@ -8,7 +8,7 @@
  * @copyright   ProudCommerce | 2020
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
- * @version     2.1.0
+ * @version     2.1.1
  * @author      Tobias Merkl <https://github.com/tabsl>
  * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
@@ -224,12 +224,16 @@ class pcModuleActivator
             foreach ($aModules as $sModule) {
                 echo '  -> activating module "', $sModule, '" ... ';
                 if (!in_array($sModule, $this->excludeModules)) {
-                    $module = oxNew(\OxidEsales\Eshop\Core\Module\Module::class);
-                    if ($module->load($sModule)) {
-                        $moduleInstaller->activate($module);
-                        echo "\033[0;32mDONE\033[0m\n";
-                    } else {
-                        echo "\033[1;33mFAILED\033[0m\n";
+                    try {
+                        $module = oxNew(\OxidEsales\Eshop\Core\Module\Module::class);
+                        if ($module->load($sModule)) {
+                            $moduleInstaller->activate($module);
+                            echo "\033[0;32mDONE\033[0m\n";
+                        } else {
+                            echo "\033[1;33mFAILED\033[0m\n";
+                        }
+                    } catch (\Exception $ex) {
+                        echo "\033[1;33mFAILED\033[0m\n" . $ex->getMessage() . "\n";
                     }
                 } else {
                     echo "\033[1;31mDISABLED\033[0m\n";
@@ -237,7 +241,7 @@ class pcModuleActivator
             }
             echo 'activating modules ... ', "\033[0;32mDONE\033[0m\n";
         } catch (\Throwable $e) {
-            print_r($e);
+            echo "\033[1;33mFAILED\033[0m\n" . $ex->getMessage() . "\n";
         }
     }
 
