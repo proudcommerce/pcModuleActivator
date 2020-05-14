@@ -1,6 +1,6 @@
 # pcModuleActivator
 
-OXID eShop 6 module activation script, eg. for deployments.
+OXID eShop 6 module (CE/PE/EE) activation script , eg. for deployments.
 
 ## Installation
 1. get by composer `composer require proudcommerce/moduleactivator`

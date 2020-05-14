@@ -8,9 +8,8 @@
  * @copyright   ProudCommerce | 2020
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
- * @version     2.1.2
+ * @version     2.1.3
  * @author      Tobias Merkl <https://github.com/tabsl>
- * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
 
 if (PHP_SAPI != 'cli') {

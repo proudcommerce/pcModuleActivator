@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.1.3 - 2020-05-15
+- improve/fix shop id switch
+
 ## 2.1.2 - 2020-04-06
 - improve module activation / catch exception (eg. permission problems)
 

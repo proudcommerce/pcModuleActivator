@@ -8,9 +8,8 @@
  * @copyright   ProudCommerce | 2020
  * @link        www.proudcommerce.com
  * @package     pcModuleActivator
- * @version     2.1.2
+ * @version     2.1.3
  * @author      Tobias Merkl <https://github.com/tabsl>
- * @author      Florian Engelhardt <https://github.com/flow-control>
  **/
 
 namespace ProudCommerce\ModuleActivator;
@@ -25,6 +24,13 @@ use \OxidEsales\Eshop\Core\Registry;
  */
 class pcModuleActivator
 {
+
+    /**
+     * pcModuleActivator version
+     *
+     * @var string
+     */
+    protected $version = '2.1.3';
 
     /**
      * Shop id
@@ -66,8 +72,15 @@ class pcModuleActivator
      *
      * @var array
      */
+    /**
+     * @var array
+     */
     protected $excludeBlocks = [];
 
+    /**
+     * pcModuleActivator constructor.
+     * @param int|int $shopId
+     */
     public function __construct(int $shopId = 1)
     {
         $this->shopId = $shopId;
@@ -168,9 +181,8 @@ class pcModuleActivator
      */
     public function execute()
     {
-        echo 'ModuleActivator (shop ' . $this->shopId . ")\n";
-        Registry::getConfig()->setShopId($this->shopId);
-        Registry::getConfig()->reinitialize();
+        echo 'pcModuleActivator ' . $this->version . "\n";
+        $this->switchToShop();
         $this->clearModules();
         $this->activateModules();
         $this->deactivateBlocks();
@@ -178,6 +190,48 @@ class pcModuleActivator
         if ($this->generateViews === true) {
             $this->generateViews();
         }
+    }
+
+    /**
+     * credentials: https://github.com/OXIDprojects/oxrun/blob/master/src/Oxrun/Application.php#L229 thx ;-)
+     *
+     * @throws \Exception
+     */
+    public function switchToShop()
+    {
+        $shopId = $this->shopId;
+        $keepThese = [\OxidEsales\Eshop\Core\ConfigFile::class];
+        $registryKeys = \OxidEsales\Eshop\Core\Registry::getKeys();
+        foreach ($registryKeys as $key) {
+            if (in_array($key, $keepThese)) {
+                continue;
+            }
+            \OxidEsales\Eshop\Core\Registry::set($key, null);
+        }
+
+        $utilsObject = new \OxidEsales\Eshop\Core\UtilsObject;
+        $utilsObject->resetInstanceCache();
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\UtilsObject::class, $utilsObject);
+
+        \OxidEsales\Eshop\Core\Module\ModuleVariablesLocator::resetModuleVariables();
+        \OxidEsales\Eshop\Core\Registry::getSession()->setVariable('shp', $shopId);
+
+        //ensure we get rid of all instances of config, even the one in Core\Base
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Config::class, null);
+        \OxidEsales\Eshop\Core\Registry::getConfig()->setConfig(null);
+        \OxidEsales\Eshop\Core\Registry::set(\OxidEsales\Eshop\Core\Config::class, null);
+
+        $moduleVariablesCache = new \OxidEsales\Eshop\Core\FileCache();
+        $shopIdCalculator = new \OxidEsales\Eshop\Core\ShopIdCalculator($moduleVariablesCache);
+
+        if (($shopId != $shopIdCalculator->getShopId())
+            || ($shopId != \OxidEsales\Eshop\Core\Registry::getConfig()->getShopId())
+        ) {
+            throw new \Exception('Failed to switch to subshop id ' . $shopId . " Calculate ID: " . $shopIdCalculator->getShopId() . " Config ShopId: " . \OxidEsales\Eshop\Core\Registry::getConfig()->getShopId());
+        }
+
+        echo 'set shop id ' . $shopId . " ... ";
+        echo "\033[0;32mDONE\033[0m\n";
     }
 
     /**
@@ -196,7 +250,7 @@ class pcModuleActivator
         $oDb->Execute(
             "DELETE
             FROM oxconfig
-            WHERE oxshopid = " . $this->shopId . " 
+            WHERE oxshopid = " . $this->shopId . "
             AND oxvarname IN ('" . $varname . "')
         "
         );
@@ -219,7 +273,7 @@ class pcModuleActivator
                     $moduleList->getModulesFromDir(
                         Registry::getConfig()->getModulesDir()
                     )
-            	);
+                );
             } catch (\Exception $ex) {
                 echo "\033[1;33mFAILED 1\033[0m\n" . $ex->getMessage() . "\n";
             }
@@ -231,10 +285,13 @@ class pcModuleActivator
                     try {
                         $module = oxNew(\OxidEsales\Eshop\Core\Module\Module::class);
                         if ($module->load($sModule)) {
-                            $moduleInstaller->activate($module);
-                            echo "\033[0;32mDONE\033[0m\n";
+                            if ($moduleInstaller->activate($module)) {
+                                echo "\033[0;32mDONE\033[0m\n";
+                            } else {
+                                echo "\033[1;33mACTIVATION FAILED \033[0m\n";
+                            }
                         } else {
-                            echo "\033[1;33mFAILED 2\033[0m\n";
+                            echo "\033[1;33mLOADING FAILED\033[0m\n";
                         }
                     } catch (\Exception $ex) {
                         echo "\033[1;33mFAILED\033[0m\n" . $ex->getMessage() . "\n";
@@ -245,7 +302,7 @@ class pcModuleActivator
             }
             echo 'activating modules ... ', "\033[0;32mDONE\033[0m\n";
         } catch (\Throwable $e) {
-            echo "\033[1;33mFAILED 3\033[0m\n" . $ex->getMessage() . "\n";
+            echo "\033[1;33mGENERAL ACTIVATION FAILED\033[0m\n" . $ex->getMessage() . "\n";
         }
     }
 
