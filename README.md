@@ -16,3 +16,7 @@ OXID eShop 6 module (CE/PE/EE) activation script , eg. for deployments.
 
 ## Screenshot
 ![pcModuleActivator](https://raw.githubusercontent.com/proudcommerce/pcModuleActivator/master/pcModuleActivator_screenshot.png)
+
+## Credentials
+Tobias Merkl <https://github.com/tabsl>
+Florian Engelhardt <https://github.com/flow-control>
