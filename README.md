@@ -1,6 +1,14 @@
 # pcModuleActivator
 
-OXID eShop 6 module (CE/PE/EE) activation script , eg. for deployments.
+OXID eShop 6.0 module (CE/PE/EE) activation script , eg. for deployments.
+
+---
+
+For OXID 6.1 (oxrun): https://github.com/OXIDprojects/oxrun#modulemultiactivate
+
+For OXID 6.2 (oxid console): https://github.com/proudcommerce/oxid-console-moduleactivator
+
+---
 
 ## Installation
 1. get by composer `composer require proudcommerce/moduleactivator`
@@ -16,6 +24,9 @@ OXID eShop 6 module (CE/PE/EE) activation script , eg. for deployments.
 
 ## Screenshot
 ![pcModuleActivator](https://raw.githubusercontent.com/proudcommerce/pcModuleActivator/master/pcModuleActivator_screenshot.png)
+
+## Notice
+- Sometimes there are some activation problems in subshops (ee) :-(
 
 ## Credentials
 Tobias Merkl <https://github.com/tabsl>
